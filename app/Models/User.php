@@ -41,4 +41,17 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+    public function adminlte_profile_url(){
+        return '/';
+    }
+
+    public function adminlte_image(){
+        return 'https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671142.jpg?w=740&t=st=1700642349~exp=1700642949~hmac=a895df365ebd5778f910ffcd2b6b8d11e88fb48a631ef0603479c9c9222fb20a';
+    }
+
+    public function adminlte_desc(){
+        return '/';
+    }
 }

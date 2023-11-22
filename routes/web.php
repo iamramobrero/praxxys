@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +15,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::group(['middleware' => ['guest']], function () {
+    Route::get('/', [AuthController::class, 'showLoginPage'])->name('showLoginPage');
+    Route::post('/login', [AuthController::class, 'doLogin'])->name('doLogin');
+});
+
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('/', [DashboardController::class, 'showDashboard'])->name('showDashboard');
+    Route::get('/logout', [AuthController::class, 'doLogout'])->name('doLogout');
 });
