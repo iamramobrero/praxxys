@@ -48,7 +48,23 @@ class ProductController extends BaseController
 
 
     public function data(Request $request){
-        $data = Product::paginate(10);
+        $data = Product::query();
+
+        if(isset($request->category) && $request->category != '')
+            $data = $data->where('category_id', $request->category);
+
+        if(isset($request->keyword) && $request->keyword != ''){
+            $keywords = array_map('trim', explode(',', $request->keyword));
+
+            $data = $data->where(function($query) use ($keywords){
+                foreach($keywords as $keyword)
+                    $query->orWhere('name', 'like', "%{$keyword}%")->orWhere('description', 'like', "%{$keyword}%");
+            });
+        }
+
+        // return $data->toSql();
+
+        $data = $data->paginate(10);
         return ProductResource::collection($data);
     }
 

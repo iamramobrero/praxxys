@@ -7,6 +7,21 @@
 
 @section('content')
 <div class="container position-relative">
+    <div class="row mb-3" v-if="products">
+        <div class="col d-flex justify-content-between">
+            <div class="input-group ">
+                <input type="text" class="form-control" placeholder="Search product Name or Description. Use comma for multiple keywords" v-model="filter.keyword">
+                <select class="form-control" v-model="filter.category" style="max-width: 300px;">
+                    <option value="">-- All --</option>
+                    <option v-for="item in productCategories" :value="item.id">@{{ item.name }}</option>
+                </select>
+                <div class="input-group-append">
+                    <button class="btn btn-sm btn-primary" @click="getProducts()">Search</button>
+                    <button class="btn btn-sm btn-danger" @click="resetFilters()">Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row table-preloader"  v-if="isTableLoading">
         <div class="col p-5 text-center text-dark">
             <i class="fas fa-spin fa-circle-notch fa-3x"></i>
@@ -24,9 +39,12 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="product in products">
-                <td>@{{ product.id }}</td>
-                <td>@{{ product.name }}</td>
+            <tr v-if="!products.length">
+                <td colspan="5" class="text-center p-3 text-danger">No products found</td>
+            </tr>
+            <tr v-if="products.length" v-for="product in products">
+                <td><a :href="product.routes.edit">@{{ product.id }}</a></td>
+                <td><a :href="product.routes.edit">@{{ product.name }}</a></td>
                 <td>@{{ product.category }}</td>
                 <td>@{{ product.date }}</td>
                 <td class="text-center">
@@ -37,7 +55,7 @@
                 </td>
             </tr>
         </tbody>
-        <tfoot v-if="products">
+        <tfoot v-if="products.length">
             <tr>
                 <td colspan="5">
                     <div class="input-group d-flex justify-content-center">
@@ -53,7 +71,6 @@
                             <button :href="links.last" class="btn btn-sm btn-light btn-outline-light text-dark" @click="changePage($event, meta.last_page)">Last</button>
                         </div>
                     </div>
-
                 </td>
             </td>
         </tfoot>
@@ -86,12 +103,37 @@ vueTable = createApp({
             links: {},
             meta: {},
             current_page:1,
+            productCategories:{},
+            filter:{
+                keyword:'',
+                category:'',
+            },
         }
     },
     methods : {
+        resetFilters(){
+            vueTable.filter = {
+                keyword:'',
+                category:'',
+            };
+
+            vueTable.getProducts()
+        },
+
+        getProductCategories(){
+            axios.get(`{{ route('api.product-categories.data') }}`,{
+                headers: {
+                    'Authorization': 'Bearer {{ $apiToken }}'
+                }
+            })
+            .then(response => {
+                vueTable.productCategories = response.data.data;
+            });
+        },
+
         getProducts(){
             vueTable.isTableLoading = true;
-            axios.get(`{{ route('api.product.data') }}?page=${vueTable.current_page}`,{
+            axios.get(`{{ route('api.product.data') }}?page=${vueTable.current_page}&keyword=${vueTable.filter.keyword}&category=${vueTable.filter.category}`,{
                 headers: {
                     'Authorization': 'Bearer {{ $apiToken }}'
                 }
@@ -107,11 +149,11 @@ vueTable = createApp({
 
         deleteProduct(product) {
             Swal.fire({
-                // title: `Are you sure you want to delete ${product.name} ?`,
                 text: `Are you sure you want to delete ${product.name} ?`,
                 icon: "question",
                 preConfirm:function(){
-                    axios.delete(product.routes.edit,{
+                    vueTable.isTableLoading = true;
+                    axios.delete(product.routes.destroy,{
                         headers: {
                             'Authorization': 'Bearer {{ $apiToken }}'
                         }
@@ -137,6 +179,7 @@ vueTable = createApp({
     }
 }).mount('.content')
 vueTable.getProducts();
+vueTable.getProductCategories();
 
 </script>
 @stop

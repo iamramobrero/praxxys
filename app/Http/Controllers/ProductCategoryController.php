@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProductCategoryResource;
 use App\Models\ProductCategory;
 use Illuminate\Http\Request;
 
 class ProductCategoryController extends Controller
 {
+
+    public function data(){
+        $data = ProductCategory::orderBy('name')->get();
+        return ProductCategoryResource::collection($data);
+    }
+
     /**
      * Display a listing of the resource.
      *
