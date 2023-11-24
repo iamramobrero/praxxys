@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 
 class AuthController extends Controller
 {
@@ -24,11 +25,16 @@ class AuthController extends Controller
                 return redirect('/')->withErrors(['username' => 'Invalid credentials','password' => 'Invalid credentials']);
         }
 
-        return redirect()->route('showDashboard');
+        $user = Auth::user();
+        $apiToken = $user->createToken('MyApp')->accessToken;
+
+        return redirect()->route('showDashboard')->withCookie(cookie('apiToken', $apiToken, 2630000 ));
 
     }
 
     public function doLogout(){
         Auth::logout();
+        Cookie::queue(Cookie::forget('apiToken'));
+        return redirect()->route('login');
     }
 }
