@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,11 +17,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['middleware' => ['guest']], function () {
-    Route::get('/', [AuthController::class, 'showLoginPage'])->name('showLoginPage');
+    Route::get('/login', [AuthController::class, 'showLoginPage'])->name('login');
     Route::post('/login', [AuthController::class, 'doLogin'])->name('doLogin');
 });
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/', [DashboardController::class, 'showDashboard'])->name('showDashboard');
-    Route::get('/logout', [AuthController::class, 'doLogout'])->name('doLogout');
+    Route::post('/logout', [AuthController::class, 'doLogout'])->name('doLogout');
+
+    Route::resource('products', ProductController::class);
 });
