@@ -34,6 +34,7 @@
     @else
         <link rel="stylesheet" href="{{ mix(config('adminlte.laravel_mix_css_path', 'css/app.css')) }}">
     @endif
+    <link rel="stylesheet" href="/css/admin_custom.css">
 
     {{-- Extra Configured Plugins Stylesheets --}}
     @include('adminlte::plugins', ['type' => 'css'])
@@ -103,6 +104,38 @@
     @endif
 
     {{-- Custom Scripts --}}
+    <script>
+        window.Swal = Swal.mixin({
+            showClass: {
+                popup: 'animated fadeInDown faster',
+                // icon: 'animated heartBeat delay-1s'
+            },
+            hideClass: {
+                popup: 'animated fadeOutUp faster',
+            },
+            confirmButtonColor:'#007bff',
+            allowOutsideClick:false,
+            confirmButtonText: 'Proceed',
+            cancelButtonText: "Cancel",
+            showCancelButton: true,
+        })
+
+        window.Toast = Swal.mixin({
+            html:null,
+            width: '400px',
+            toast: true,
+            position: 'bottom-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            showCancelButton: false,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        })
+
+    </script>
     @yield('adminlte_js')
 
 </body>
