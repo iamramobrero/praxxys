@@ -34,7 +34,7 @@
     @else
         <link rel="stylesheet" href="{{ mix(config('adminlte.laravel_mix_css_path', 'css/app.css')) }}">
     @endif
-    <link rel="stylesheet" href="/css/admin_custom.css">
+    <link rel="stylesheet" href="/css/app.css">
 
     {{-- Extra Configured Plugins Stylesheets --}}
     @include('adminlte::plugins', ['type' => 'css'])
