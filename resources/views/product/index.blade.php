@@ -8,16 +8,40 @@
 @section('content')
 <div class="container position-relative">
     <div class="row mb-3" v-if="products">
-        <div class="col d-flex justify-content-between">
-            <div class="input-group ">
-                <input type="text" class="form-control" placeholder="Search product Name or Description. Use comma for multiple keywords" v-model="filter.keyword">
-                <select class="form-control" v-model="filter.category" style="max-width: 300px;">
-                    <option value="">-- All --</option>
-                    <option v-for="item in productCategories" :value="item.id">@{{ item.name }}</option>
-                </select>
-                <div class="input-group-append">
-                    <button class="btn btn-sm btn-primary" @click="getProducts()">Search</button>
-                    <button class="btn btn-sm btn-danger" @click="resetFilters()">Reset</button>
+        <div class="col">
+            <div class="card">
+                <div class="card-body d-md-flex justify-content-between">
+                    <div class="flex-fill align-self-end p-1">
+                        <label>Keywords (Comma separated)</label>
+                        <input type="text" class="form-control form-control-sm" placeholder="Search product Name or Description. Use comma for multiple keywords" v-model="filter.keyword">
+                    </div>
+                    <div class="flex-fill align-self-end p-1">
+                        <label>Category</label>
+                        <select class="form-control form-control-sm" v-model="filter.category">
+                            <option value="">-- All Category --</option>
+                            <option v-for="item in productCategories" :value="item.id">@{{ item.name }}</option>
+                        </select>
+                    </div>
+                    <div class="flex-fill align-self-end p-1">
+                        <label>Sort By</label>
+                        <select class="form-control form-control-sm" v-model="filter.sort_by">
+                            <option value="id">ID</option>
+                            <option value="name">Name</option>
+                            <option value="category">Category</option>
+                            <option value="date">Date</option>
+                        </select>
+                    </div>
+                    <div class="flex-fill align-self-end p-1">
+                        <label>Sort Order</label>
+                        <select class="form-control form-control-sm" v-model="filter.sort_order">
+                            <option value="ASC">Ascending</option>
+                            <option value="DESC">Descending</option>
+                        </select>
+                    </div>
+                    <div class="flex-fill align-self-end text-center p-1 d-flex justify-content-between">
+                        <button class="btn btn-sm btn-primary flex-fill mr-1" @click="getProducts()">Search</button>
+                        <button class="btn btn-sm btn-danger flex-fill" @click="resetFilters()">Reset</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -31,7 +55,7 @@
     <table class="table table-sm table-light table-bordered">
         <thead>
             <tr>
-                <th>ID</th>
+                <th class="text-center">ID</th>
                 <th>Product Name</th>
                 <th>Category</th>
                 <th>Date</th>
@@ -89,6 +113,18 @@
 }
 table{
     min-height: 100px;
+    width:100%;
+}
+table td{
+    width: 20%;
+}
+table td:first-child{
+    width:10%;
+    text-align: center;
+}
+table td:last-child{
+    width:15%;
+    text-align: center;
 }
 </style>
 @stop
@@ -107,6 +143,8 @@ vueTable = createApp({
             filter:{
                 keyword:'',
                 category:'',
+                sort_order:'ASC',
+                sort_by:'id',
             },
         }
     },
@@ -133,7 +171,7 @@ vueTable = createApp({
 
         getProducts(){
             vueTable.isTableLoading = true;
-            axios.get(`{{ route('api.product.data') }}?page=${vueTable.current_page}&keyword=${vueTable.filter.keyword}&category=${vueTable.filter.category}`,{
+            axios.get(`{{ route('api.product.data') }}?page=${vueTable.current_page}&sort_by=${vueTable.filter.sort_by}&sort_order=${vueTable.filter.sort_order}&keyword=${vueTable.filter.keyword}&category=${vueTable.filter.category}`,{
                 headers: {
                     'Authorization': 'Bearer {{ $apiToken }}'
                 }

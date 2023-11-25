@@ -48,7 +48,7 @@ class ProductController extends BaseController
 
 
     public function data(Request $request){
-        $data = Product::query();
+        $data = Product::select('products.*');
 
         if(isset($request->category) && $request->category != '')
             $data = $data->where('category_id', $request->category);
@@ -62,7 +62,18 @@ class ProductController extends BaseController
             });
         }
 
-        // return $data->toSql();
+        if(isset($request->sort_by) && $request->sort_by != ''){
+            $sortBy ='id';
+            $sortOrder = $request->input('sort_order','ASC');
+            if($request->sort_by=='date') $sortBy = 'datetime_at';
+            elseif($request->sort_by=='name') $sortBy = 'products.name';
+            elseif($request->sort_by=='category'){
+                $sortBy = 'product_categories.name';
+                $data = $data->leftJoin('product_categories','product_categories.id','products.category_id');
+            };
+            $data = $data->orderBy($sortBy,$sortOrder);
+        }
+
 
         $data = $data->paginate(10);
         return ProductResource::collection($data);
