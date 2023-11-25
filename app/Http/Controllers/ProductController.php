@@ -34,9 +34,12 @@ class ProductController extends BaseController
     }
 
 
-    public function edit(Product $product)
+    public function edit(Product $product, Request $request)
     {
-        //
+        $this->pageTitle = 'Edit Product';
+        $this->apiToken = $request->cookie('apiToken');
+        $this->product = $product;
+        return view('product.edit', $this->data);
     }
 
 

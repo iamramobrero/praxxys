@@ -444,13 +444,23 @@ return [
                 ],
             ],
         ],
-        'Pace' => [
-            'active' => false,
+        'Sweetalert2' => [
+            'active' => true,
             'files' => [
                 [
-                    'type' => 'css',
+                    'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/blue/pace-theme-center-radar.min.css',
+                    'location' => 'https://cdn.jsdelivr.net/npm/sweetalert2@11',
+                ],
+            ],
+        ],
+        'TinyMCE' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => 'https://cdn.tiny.cloud/1/nfok40dv5x9rg8c3exdobzl7g95dgog67i8h45lh9cidkt74/tinymce/6/tinymce.min.js',
                 ],
                 [
                     'type' => 'js',
