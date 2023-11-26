@@ -15,5 +15,10 @@
         "lodash": "^4.17.19",
         "postcss": "^8.1.14",
         "webpack-cli": "^5.1.4"
+    },
+    "dependencies": {
+        "@uppy/core": "^3.7.1",
+        "@uppy/dashboard": "^3.7.1",
+        "@uppy/xhr-upload": "^3.5.0"
     }
 }

@@ -10,6 +10,19 @@ window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
+import Uppy, { debugLogger } from '@uppy/core'
+import Dashboard from '@uppy/dashboard'
+import XHR  from '@uppy/xhr-upload'
+import '@uppy/core/dist/style.css'
+import '@uppy/dashboard/dist/style.css'
+
+
+window.Uppy = Uppy;
+window.Dashboard = Dashboard;
+window.XHR = XHR;
+window.debugLogger = debugLogger;
+
+
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
