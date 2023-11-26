@@ -15,11 +15,14 @@
 
 @section('content')
 <div class="container position-relative">
-    <div class="row mb-5">
-        <div class="col text-center">
-            <button v-for="n in 3" class="btn btn-large btn-border">
-                Step @{{n}}<br>
-            </button>
+    <div class="row mb-2">
+        <div class="col text-center wizard">
+            <div class="d-inline-block position-relative">
+                <div class="connector"></div>
+                <button v-for="n in 3" class="btn btn-large btn-border" v-bind:class="isWizardStepDone(n)">
+                    Step <br>@{{ n }}<br>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -135,6 +138,31 @@
 .uppy-Dashboard-inner {
     margin: 0 auto;
 }
+.wizard{
+    margin-bottom: 20px;
+}
+.wizard .btn {
+    color: #272727;
+    border-radius: 100%;
+    border: 2px solid #b9b9b9;
+    margin: 0 20px;
+    background: #fff;
+    z-index: 1;
+    position: relative;
+    line-height: 1;
+    padding: 15px;
+}
+.wizard .btn.done {
+    background: #d2ffd2;
+    border-color: green;
+}
+.wizard .connector {
+    position: absolute;
+    border: 1px solid #b9b9b9;
+    width: 100%;
+    z-index: 0;
+    top: 50%;
+}
 </style>
 @stop
 @section('js')
@@ -161,6 +189,9 @@ vueTable = createApp({
         }
     },
     methods : {
+        isWizardStepDone(index){
+            if(index <= this.$data.wizardStep) return 'done';
+        },
         deleteImage(route){
             Swal.fire({
                 text: `Are you sure you want to delete this record ?`,
