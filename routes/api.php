@@ -18,8 +18,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/products', [ProductController::class, 'store'])->name('api.products.store');
-    Route::get('/products', [ProductController::class, 'data'])->name('api.product.data');
-    Route::delete('/products/{product?}', [ProductController::class, 'destroy'])->name('api.product.destroy');
+    Route::get('/products', [ProductController::class, 'data'])->name('api.products.data');
+    Route::get('/products/{product?}', [ProductController::class, 'show'])->name('api.products.show');
+    Route::delete('/products/{product?}', [ProductController::class, 'destroy'])->name('api.products.destroy');
+    Route::post('/products/{product?}/images/upload', [ProductController::class, 'imageUpload'])->name('api.product.image.upload');
 
     Route::get('/product-categories', [ProductCategoryController::class, 'data'])->name('api.product-categories.data');
 });

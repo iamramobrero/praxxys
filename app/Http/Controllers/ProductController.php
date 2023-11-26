@@ -45,7 +45,11 @@ class ProductController extends BaseController
 
     public function show(Product $product)
     {
-        //
+        return new ProductResource($product);
+    }
+
+    public function imageUpload(Product $product, Request $request){
+        return $request;
     }
 
 

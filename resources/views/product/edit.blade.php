@@ -121,6 +121,21 @@ vueTable = createApp({
         }
     },
     methods : {
+        getProductData(){
+            axios.get(`{{ route('api.products.show',[$product->id]) }}`,{
+                headers: {
+                    'Authorization': 'Bearer {{ $apiToken }}'
+                }
+            })
+            .then(response => {
+                var data = response.data.data;
+                this.$data.product.name = data.name;
+                this.$data.product.category_id = data.category.id;
+                this.$data.product.datetime = data.date;
+                this.$data.product.description = data.description;
+            });
+        },
+
         save(){
             console.log(this.$data.product);
             if(!this.validateWizardStep()){
@@ -135,7 +150,24 @@ vueTable = createApp({
             })
             .then(response => {
                 // try to upload the images
-                window.location.replace(`{{ route('products.index') }}`);
+                // console.log(uppyImages.getPlugin('XHR'));
+
+                uppyImages
+                // .getPlugin('XHR').setOptions({
+                //     endpoint: response.data.data.routes.uploadImage,
+                // })
+                .upload().then((result) => {
+                    console.info('Successful uploads:', result.successful);
+
+                    if (result.failed.length > 0) {
+                        console.error('Errors:');
+                        result.failed.forEach((file) => {
+                            console.error(file.error);
+                        });
+                    }
+                });
+
+                // window.location.replace(`{{ route('products.index') }}`);
             });
         },
         showErrors(wizardStep){
@@ -169,22 +201,6 @@ vueTable = createApp({
             if((wizardStep > this.$data.wizardStep) && !this.validateWizardStep())
                 return false;
             this.$data.wizardStep = wizardStep;
-        },
-
-        getProduct(){
-            vueTable.isTableLoading = true;
-            axios.get(`{{ route('api.product.data') }}?page=${vueTable.current_page}&sort_by=${vueTable.filter.sort_by}&sort_order=${vueTable.filter.sort_order}&keyword=${vueTable.filter.keyword}&category=${vueTable.filter.category}`,{
-                headers: {
-                    'Authorization': 'Bearer {{ $apiToken }}'
-                }
-            })
-            .then(response => {
-                vueTable.links = response.data.links;
-                vueTable.meta = response.data.meta;
-                vueTable.products = response.data.data;
-                vueTable.current_page = response.data.meta.current_page;
-                vueTable.isTableLoading = false;
-            });
         },
 
         getProductCategories(){
@@ -221,7 +237,11 @@ vueTable = createApp({
             hideUploadButton:true,
         })
         .use(XHR, {
-            endpoint: '/test'
+            endpoint: '/upload',
+            method: 'POST',
+            headers:{
+                'Authorization': 'Bearer {{ $apiToken }}'
+            }
         })
         .on('file-added', (file) => {
             console.log('Added file', file);
@@ -245,7 +265,12 @@ vueTable = createApp({
 
     }
 }).mount('.content')
+
+@if ($product->id)
+vueTable.getProductData()
+@endif
 vueTable.getProductCategories();
+
 tinymce.init({
     selector: 'textarea',
     plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',

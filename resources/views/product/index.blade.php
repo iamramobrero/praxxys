@@ -171,7 +171,7 @@ vueTable = createApp({
 
         getProducts(){
             vueTable.isTableLoading = true;
-            axios.get(`{{ route('api.product.data') }}?page=${vueTable.current_page}&sort_by=${vueTable.filter.sort_by}&sort_order=${vueTable.filter.sort_order}&keyword=${vueTable.filter.keyword}&category=${vueTable.filter.category}`,{
+            axios.get(`{{ route('api.products.data') }}?page=${vueTable.current_page}&sort_by=${vueTable.filter.sort_by}&sort_order=${vueTable.filter.sort_order}&keyword=${vueTable.filter.keyword}&category=${vueTable.filter.category}`,{
                 headers: {
                     'Authorization': 'Bearer {{ $apiToken }}'
                 }
