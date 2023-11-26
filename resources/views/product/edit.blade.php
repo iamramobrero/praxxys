@@ -76,9 +76,9 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Date</label>
                         <div class="col-sm-10">
-                            <input class="form-control" v-bind:class="((wizardErrors[2] && !product.datetime) ? 'is-invalid':null )"type="text" v-model="product.datetime" name="datetime" required>
+                            <input class="form-control" v-bind:class="((wizardErrors[2] && !product.datetime) ? 'is-invalid':null )" type="text" v-model="product.datetime" id="datetime" name="datetime" readonly required>
                             <div class="invalid-feedback">
-                                Please provide a valid name.
+                                Please provide a valid date.
                             </div>
                         </div>
                     </div>
@@ -122,7 +122,21 @@ vueTable = createApp({
     },
     methods : {
         save(){
+            console.log(this.$data.product);
+            if(!this.validateWizardStep()){
+                return false;
+            }
 
+            // save data
+            axios.post(`{{ route('api.products.store') }}`,this.$data.product,{
+                headers: {
+                    'Authorization': 'Bearer {{ $apiToken }}'
+                }
+            })
+            .then(response => {
+                // try to upload the images
+                window.location.replace(`{{ route('products.index') }}`);
+            });
         },
         showErrors(wizardStep){
             var stepIndex = wizardStep-1;
@@ -139,14 +153,12 @@ vueTable = createApp({
 
         validateWizardStep(){
             for (let i = 1; i <= this.$data.wizardStep; i++) {
-                if((i==1) && (!this.$data.product.name || !this.$data.product.category_id || !this.$data.product.description )){
-                    console.log('error on 1');
-                    this.$data.validated = true;
+                if(
+                    ((i==1) && (!this.$data.product.name || !this.$data.product.category_id || !this.$data.product.description )) ||
+                    ((i==2) && (!uppyImages.getFiles().length)) ||
+                    ((i==3) && (!this.$data.product.datetime))
+                )
                     return this.showErrors(i);
-                }
-                else if((i==2) && (!uppyImages.getFiles().length)){
-                    return this.showErrors(i);
-                }
             }
             return true;
         },
@@ -156,7 +168,6 @@ vueTable = createApp({
         changePage(wizardStep){
             if((wizardStep > this.$data.wizardStep) && !this.validateWizardStep())
                 return false;
-
             this.$data.wizardStep = wizardStep;
         },
 
@@ -188,6 +199,7 @@ vueTable = createApp({
         },
     },
     mounted() {
+        // initialize uploader
         uppyImages = new Uppy({
             restrictions:{
                 maxFileSize:'2mb',
@@ -214,6 +226,22 @@ vueTable = createApp({
         .on('file-added', (file) => {
             console.log('Added file', file);
         });
+
+        // initialize datepicker
+        $('#datetime').daterangepicker({
+            "singleDatePicker": true,
+            "showDropdowns": true,
+            "timePicker": true,
+            "autoApply": true,
+            locale: {
+                format: 'YYYY-MM-DD hh:mm A'
+            }
+        });
+
+        $('body').on('change','#datetime', function(){
+            vueTable.product.datetime = $(this).val();
+            console.log(vueTable.product);
+        })
 
     }
 }).mount('.content')

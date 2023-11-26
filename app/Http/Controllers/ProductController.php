@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ProductController extends BaseController
@@ -24,7 +25,21 @@ class ProductController extends BaseController
 
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => ['required'],
+            'description' => ['required'],
+            'category_id' => ['required','exists:product_categories,id'],
+            'datetime' => ['required']
+        ]);
+
+        $product = Product::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'category_id' => $request->category_id,
+            'datetime_at' => Carbon::parse($request->datetime),
+        ]);
+
+        return new ProductResource($product);
     }
 
 

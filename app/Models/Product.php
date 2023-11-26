@@ -11,9 +11,7 @@ class Product extends Model
     use HasFactory;
     use SoftDeletes;
 
-    // protected $casts = [
-    //     'datetime_at' => 'datetime:Y-m-d H:i:s',
-    // ];
+    protected $guarded = [];
 
     public function category(){
         return $this->hasOne(ProductCategory::class, 'id','category_id');
