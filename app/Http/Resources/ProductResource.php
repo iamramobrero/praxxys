@@ -23,10 +23,12 @@ class ProductResource extends JsonResource
             'category' => new ProductCategoryResource($this->category),
             'description' => $this->description,
             'date' => Carbon::parse($this->datetime_at)->format('Y-m-d h:i A'),
+            'images' => ProductImageResource::collection($this->images),
+            'image' => $this->image,
             'routes' => [
                 'edit' => route('products.edit',[$this->id]),
                 'destroy' => route('products.destroy',[$this->id]),
-                'uploadImage' => route('api.product.image.upload',[$this->id]),
+                'uploadImage' => route('api.product-images.store',['product_id'=>$this->id]),
             ],
         ];
     }

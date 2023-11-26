@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProductImageResource;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use App\Models\ProductImage;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends BaseController
 {
@@ -17,11 +20,13 @@ class ProductController extends BaseController
         return view('product.index', $this->data);
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $this->pageTitle = 'Create Product';
+        $this->apiToken = $request->cookie('apiToken');
+        $this->product = new Product();
+        return view('product.edit', $this->data);
     }
-
 
     public function store(Request $request)
     {
@@ -48,9 +53,6 @@ class ProductController extends BaseController
         return new ProductResource($product);
     }
 
-    public function imageUpload(Product $product, Request $request){
-        return $request;
-    }
 
 
     public function edit(Product $product, Request $request)
@@ -64,7 +66,20 @@ class ProductController extends BaseController
 
     public function update(Request $request, Product $product)
     {
-        //
+        $request->validate([
+            'name' => ['required'],
+            'description' => ['required'],
+            'category_id' => ['required','exists:product_categories,id'],
+            'datetime' => ['required']
+        ]);
+
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->category_id = $request->category_id;
+        $product->datetime_at = Carbon::parse($request->datetime);
+        $product->save();
+
+        return new ProductResource($product);
     }
 
 

@@ -20,4 +20,22 @@ class Product extends Model
     public function getCategoryNameAttribute(){
         return $this->category->name;
     }
+
+    public function images(){
+        return $this->hasMany(ProductImage::class, 'product_id', 'id');
+    }
+
+    public function latest_image(){
+        return $this->hasOne(ProductImage::class, 'product_id', 'id')->latest();
+    }
+
+    public function primary_image(){
+        return $this->hasOne(ProductImage::class, 'product_id', 'id')->where('is_primary',1);
+    }
+
+    public function getImageAttribute(){
+        if($this->primary_image)
+            return $this->primary_image->link;
+        else return 'https://placehold.co/400';
+    }
 }

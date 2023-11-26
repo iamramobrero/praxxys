@@ -2,7 +2,10 @@
 @section('title',  $pageTitle)
 
 @section('content_header')
+<div class="d-flex justify-content-between align-items-center">
     <h1>{{$pageTitle}}</h1>
+    <a href="{{ route('products.create') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Add Product</a>
+</div>
 @stop
 
 @section('content')
@@ -52,10 +55,11 @@
             <p>Loading records</p>
         </div>
     </div>
-    <table class="table table-sm table-light table-bordered">
+    <table class="table table-responsive table-sm table-light table-bordered">
         <thead>
             <tr>
                 <th class="text-center">ID</th>
+                <th class="text-center">Image</th>
                 <th>Product Name</th>
                 <th>Category</th>
                 <th>Date</th>
@@ -68,8 +72,9 @@
             </tr>
             <tr v-if="products.length" v-for="product in products">
                 <td><a :href="product.routes.edit">@{{ product.id }}</a></td>
+                <td class="text-center"><img :src="product.image" class="img-thumbnail" style="max-width: 74px;"></td>
                 <td><a :href="product.routes.edit">@{{ product.name }}</a></td>
-                <td>@{{ product.category }}</td>
+                <td>@{{ product.category.name }}</td>
                 <td>@{{ product.date }}</td>
                 <td class="text-center">
                     <div class="btn-group">
@@ -123,7 +128,7 @@ table td:first-child{
     text-align: center;
 }
 table td:last-child{
-    width:15%;
+    width:10%;
     text-align: center;
 }
 </style>
@@ -143,7 +148,7 @@ vueTable = createApp({
             filter:{
                 keyword:'',
                 category:'',
-                sort_order:'ASC',
+                sort_order:'DESC',
                 sort_by:'id',
             },
         }
