@@ -14,17 +14,22 @@ Please install [**Composer**](https://getcomposer.org/) to download the PHP libr
 Please install **NPM** to download JS Libraries
 
 ## Installation
-Create your `.env` file in the root folder and update the database connection accordingly. You may copy `env.example` as template
+### Download required libraries
+1. Create your `.env` file in the root folder and update the database connection accordingly. You may copy `env.example` as template
 
-Run `composer install` to download PHP libaries
+2. Run `composer install` to download PHP libaries
 
-Run `npm install` to download JS libaries
+3. Run `npm install` to download JS libaries
 
-Run `php artisan passport:install` to install [**Laravel Passport**](https://laravel.com/docs/10.x/passport) for API Authentication
+4. Run `php artisan key:generate` too generate App key
 
 
-## Migration and Seeding
-Run `php artisan migrate:refresh --seed` to generate and fill database
+### Migration and Seeding
+5. Run `php artisan migrate:refresh --seed` to generate and fill database. Factories as set to create 10 Product Categories and 50 Products
+
+6. Run `php artisan passport:install` to install [**Laravel Passport**](https://laravel.com/docs/10.x/passport) for API Authentication
+
+7. Run `php artisan serve`
 
 ## Default Admin Account
 username:`webmaster`
