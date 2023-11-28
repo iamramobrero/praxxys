@@ -7,7 +7,7 @@
     <div>
     <a href="{{ route('products.index') }}" class="btn btn-primary btn-sm"><i class="fa fa-chevron-left"></i> Products List</a>
     @if ($product->id)
-    <a href="{{ route('products.create') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Add Product</a>
+    <a href="{{ route('products.create') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Create Product</a>
     @endif
     </div>
 </div>

@@ -4,7 +4,7 @@
 @section('content_header')
 <div class="d-flex justify-content-between align-items-center">
     <h1>{{$pageTitle}}</h1>
-    <a href="{{ route('products.create') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Add Product</a>
+    <a href="{{ route('products.create') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Create Product</a>
 </div>
 @stop
 
@@ -55,7 +55,7 @@
             <p>Loading records</p>
         </div>
     </div>
-    <table class="table table-responsive table-sm table-light table-bordered">
+    <table class="table table-striped table-sm table-light table-bordered">
         <thead>
             <tr>
                 <th class="text-center">ID</th>
@@ -68,7 +68,7 @@
         </thead>
         <tbody>
             <tr v-if="!products.length">
-                <td colspan="5" class="text-center p-3 text-danger">No products found</td>
+                <td colspan="6" class="text-center p-3 text-danger">No products found</td>
             </tr>
             <tr v-if="products.length" v-for="product in products">
                 <td><a :href="product.routes.edit">@{{ product.id }}</a></td>

@@ -259,7 +259,7 @@ return [
     'register_url' => false,
     'password_reset_url' => false,
     'password_email_url' => false,
-    'profile_url' => true,
+    'profile_url' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -312,7 +312,7 @@ return [
                     'icon'  => 'fa fa-chevron-right',
                 ],
                 [
-                    'text' => 'Add Product',
+                    'text' => 'Create Product',
                     'url'  => '/products/create',
                     'icon'    => 'fa fa-chevron-right',
                 ],
