@@ -29,7 +29,9 @@ Please install **NPM** to download JS Libraries
 
 6. Run `php artisan passport:install` to install [**Laravel Passport**](https://laravel.com/docs/10.x/passport) for API Authentication
 
-7. Run `php artisan serve`
+7. Run `php artisan storage:link`
+
+8. Run `php artisan serve`
 
 ## Default Admin Account
 username:`webmaster`
